@@ -9,3 +9,4 @@ move_head
 sweep_look
 remember
 forget
+web_fetch
