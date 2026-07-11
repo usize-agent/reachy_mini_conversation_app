@@ -8,6 +8,8 @@ from importlib.resources import files
 
 from dotenv import find_dotenv, load_dotenv
 
+from reachy_mini_conversation_app.toml_config import apply_provider_config
+
 
 # Locked profile: set to a profile name (e.g., "astronomer") to lock the app
 # to that profile and disable all profile switching. Leave as None for normal behavior.
@@ -353,6 +355,12 @@ else:
     else:
         logger.warning("No .env file found, using environment variables")
 
+# Provider config TOML (~/.reachy/config.toml or --config) and CLI overrides
+# rank above .env/environment variables: CLI args > config.toml > env/.env.
+# REACHY_MINI_SKIP_DOTENV also skips auto-discovering ~/.reachy/config.toml,
+# for the same reproducibility reasons it skips .env auto-discovery.
+apply_provider_config(skip_default_config=_skip_dotenv)
+
 
 class Config:
     """Configuration class for the conversation app."""
@@ -477,6 +485,9 @@ config = Config()
 
 def refresh_runtime_config_from_env() -> None:
     """Refresh mutable runtime config fields from the current environment."""
+    # Reassert provider config TOML / CLI overrides so they still outrank an
+    # instance-local .env that may have just been reloaded on top of them.
+    apply_provider_config(skip_default_config=_skip_dotenv)
     config.OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     config.GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     config.BACKEND_PROVIDER = _normalize_backend_provider(

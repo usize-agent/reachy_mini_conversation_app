@@ -1,0 +1,45 @@
+# Provider configuration for the Reachy Mini conversation app.
+#
+# Copy this file to ~/.reachy/config.toml (or pass --config /path/to/file.toml)
+# to select a backend/model/API key without editing .env.
+#
+# Precedence at runtime (highest wins):
+#   CLI flags (--backend/--model/--provider/...) > this file > .env/environment variables > built-in defaults
+#
+# Pick which [providers.*] section below is active by default:
+active_provider = "openai"
+
+# Each [providers.<name>] table is a self-contained backend selection.
+# Switch between them at launch with: reachy-mini-conversation-app --provider <name>
+
+[providers.openai]
+backend = "openai"
+model = "gpt-realtime-2"
+api_key = "sk-..."
+
+[providers.gemini]
+backend = "gemini"
+model = "gemini-3.1-flash-live-preview"
+api_key = "..."
+
+# Hugging Face deployed mode uses the built-in server; no api_key needed.
+[providers.hf]
+backend = "huggingface"
+connection_mode = "deployed"
+
+# Example of a local/LAN Hugging Face backend for development.
+[providers.hf-local]
+backend = "huggingface"
+connection_mode = "local"
+ws_url = "ws://127.0.0.1:8765/v1/realtime"
+
+# Settings that aren't tied to a specific provider.
+[general]
+# hf_token = "hf_..."
+# hf_home = "./cache"
+# local_vision_model = "HuggingFaceTB/SmolVLM2-2.2B-Instruct"
+# transcription_language = "en"
+# custom_profile = "mars_rover"
+# profiles_directory = "external_content/external_profiles"
+# tools_directory = "external_content/external_tools"
+# autoload_external_tools = true

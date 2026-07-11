@@ -7,6 +7,7 @@ import subprocess
 from typing import TYPE_CHECKING, Optional
 
 from reachy_mini import ReachyMini
+from reachy_mini_conversation_app.toml_config import add_provider_config_args
 from reachy_mini_conversation_app.camera_worker import CameraWorker
 from reachy_mini_conversation_app.vision.head_tracking import HeadTracker
 
@@ -48,6 +49,7 @@ def parse_args() -> tuple[argparse.Namespace, list]:  # type: ignore
         default=None,
         help="[Optional] Robot name to target. Must match the daemon's --robot-name when connecting to a specific robot, mainly useful for development with multiple robots.",
     )
+    add_provider_config_args(parser)
     subparsers = parser.add_subparsers(dest="command")
     tool_spaces_parser = subparsers.add_parser("tool-spaces", help="Manage installed Hugging Face Space tool sources")
     tool_spaces_subparsers = tool_spaces_parser.add_subparsers(dest="tool_spaces_command", required=True)

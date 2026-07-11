@@ -5,6 +5,7 @@ import time
 import asyncio
 import argparse
 import threading
+import dataclasses
 from typing import Optional
 from pathlib import Path
 from collections.abc import Callable, Awaitable
@@ -82,6 +83,10 @@ def run(
             startup_settings = load_startup_settings_into_runtime(instance_path)
         except Exception as e:
             logger.warning("Failed to load startup settings: %s", e)
+
+    if getattr(args, "voice", None):
+        startup_settings = dataclasses.replace(startup_settings, voice=args.voice)
+        logger.info("Overriding startup voice from --voice: %s", args.voice)
 
     if config.BACKEND_PROVIDER == HF_BACKEND:
         logger.info(
