@@ -139,6 +139,35 @@ Copy `.env.example` to `.env` when you want to switch backends, provide API keys
 | `HF_TOKEN` | Optional token for Hugging Face access (for gated/private assets). |
 | `LOCAL_VISION_MODEL` | Hugging Face model path for local vision processing (only used with `--local-vision` flag, defaults to `HuggingFaceTB/SmolVLM2-2.2B-Instruct`). |
 
+### Provider config file (~/.reachy/config.toml)
+
+For a more sophisticated setup than `.env` — e.g. keeping multiple backend/API-key combos on hand and switching between them at launch — copy `config.example.toml` to `~/.reachy/config.toml` (or point `--config` at any path). It supports named `[providers.<name>]` sections plus a `[general]` table for the rest of the settings above:
+
+```toml
+active_provider = "openai"
+
+[providers.openai]
+backend = "openai"
+model = "gpt-realtime-2"
+api_key = "sk-..."
+
+[providers.hf-local]
+backend = "huggingface"
+connection_mode = "local"
+ws_url = "ws://127.0.0.1:8765/v1/realtime"
+
+[general]
+custom_profile = "mars_rover"
+```
+
+Switch which section is active without editing the file:
+
+```bash
+reachy-mini-conversation-app --provider hf-local
+```
+
+**Precedence** (highest wins): CLI flags (`--backend`, `--model`, `--provider`, `--voice`, `--hf-connection-mode`, `--hf-ws-url`) > `~/.reachy/config.toml` (or `--config`) > `.env`/environment variables > built-in defaults. This lets you keep durable settings in the TOML file and override any single value per-run from the command line.
+
 ### Hugging Face Connection Modes
 
 Use the built-in Hugging Face server through the app-managed Space proxy. This is the default for a new install; set it explicitly only when you want to switch back from a saved local endpoint:
@@ -205,6 +234,13 @@ The app runs in console mode by default. Add `--ui` to also serve a web UI at ht
 | `--ui` | `False` | Serve the web UI at http://127.0.0.1:7860/, in addition to console mode. |
 | `--robot-name` | `None` | Optional. Connect to a specific robot by name when running multiple daemons on the same subnet. See [Multiple robots on the same subnet](#advanced-features). |
 | `--debug` | `False` | Enable verbose logging for troubleshooting. |
+| `--config PATH` | `~/.reachy/config.toml` | Path to a provider config TOML file. See [Provider config file](#provider-config-file-reachyconfigtoml). |
+| `--provider NAME` | `None` | Activate the `[providers.NAME]` section from the config TOML for this run. |
+| `--backend {openai,gemini,huggingface}` | `None` | Override the realtime backend provider for this run. |
+| `--model MODEL_NAME` | `None` | Override the model name for this run. |
+| `--voice VOICE` | `None` | Override the assistant voice for this run. |
+| `--hf-connection-mode {local,deployed}` | `None` | Override the Hugging Face realtime connection mode for this run. |
+| `--hf-ws-url URL` | `None` | Override the direct Hugging Face realtime websocket URL for this run. |
 
 ### Examples
 
@@ -220,6 +256,12 @@ reachy-mini-conversation-app --local-vision
 
 # Audio-only conversation (no camera)
 reachy-mini-conversation-app --no-camera
+
+# Use a named provider section from ~/.reachy/config.toml
+reachy-mini-conversation-app --provider gemini
+
+# One-off backend/model override without touching any config file
+reachy-mini-conversation-app --backend openai --model gpt-realtime-2
 
 # Launch with the minimal web UI for personality/mic/settings control
 reachy-mini-conversation-app --ui
