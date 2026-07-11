@@ -275,6 +275,7 @@ reachy-mini-conversation-app --ui
 | Tool | Action | Dependencies |
 |------|--------|--------------|
 | `move_head` | Queue a head pose change (left/right/up/down/front). | Core install only. |
+| `set_orientation` | Precisely set head pitch/roll/yaw, body yaw, and/or left/right antenna angles in degrees; omitted axes keep their current value. | Core install only. |
 | `camera` | Capture the latest camera frame and analyze it with the selected realtime backend or the local vision model. | Requires camera worker. Uses local vision when `--local-vision` is enabled. |
 | `head_tracking` | Enable or disable head-tracking offsets (not identity recognition - only detects and tracks head position). | Camera worker with configured head tracker (`--head-tracker`). |
 | `dance` | Queue a dance from `reachy_mini_dances_library`. | Core install only. |
