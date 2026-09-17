@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Reachy FPS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="stage">
+  <video id="video" autoplay playsinline></video>
+  <div id="novideo" class="novideo">
+    <div class="novideo-title">No video yet</div>
+    <div id="novideo-detail" class="novideo-detail">Connecting to the robot camera…</div>
+  </div>
+  <div id="crosshair" aria-hidden="true"></div>
+
+  <section id="status" class="panel">
+    <div class="row"><span class="dot" id="dot-daemon"></span>Motion <span id="st-daemon" class="dim">connecting</span></div>
+    <div class="row"><span class="dot" id="dot-video"></span>Video <span id="st-video" class="dim">connecting</span></div>
+    <div class="row"><span class="dot" id="dot-mic"></span>Voice <span id="st-mic" class="dim">off</span></div>
+  </section>
+
+  <section id="telemetry" class="panel mono">
+    <div>head yaw <b id="t-yaw">0</b>°</div>
+    <div>pitch <b id="t-pitch">0</b>°</div>
+    <div>height <b id="t-z">0</b> mm</div>
+    <div>body <b id="t-body">0</b>°</div>
+  </section>
+
+  <section id="help" class="panel">
+    <div><kbd>Click</kbd> take control · <kbd>Esc</kbd> release mouse</div>
+    <div><kbd>Mouse</kbd> look · <kbd>Q</kbd>/<kbd>E</kbd> spin base</div>
+    <div><kbd>Space</kbd> rise · <kbd>C</kbd> crouch · <kbd>R</kbd> recenter</div>
+    <div><kbd>M</kbd> voice on/off</div>
+  </section>
+
+  <section id="antenna-panel" class="panel">
+    <div class="panel-head">
+      <span>Antennas</span>
+      <label class="check"><input type="checkbox" id="ant-mirror" checked> mirror</label>
+    </div>
+    <canvas id="antenna-canvas" width="240" height="170"></canvas>
+    <div class="panel-foot">
+      <span class="dim">Drag the tips (Esc first)</span>
+      <button id="ant-reset" type="button">Reset</button>
+    </div>
+  </section>
+
+  <div id="actions">
+    <button id="btn-wake" type="button">Wake up</button>
+    <button id="btn-sleep" type="button">Sleep</button>
+  </div>
+
+  <div id="touch-controls" class="touch-controls">
+    <div id="stick" class="stick" role="application" aria-label="Joystick: left and right spin the base, up and down raise or lower the head">
+      <span class="stick-label up">rise</span>
+      <span class="stick-label down">crouch</span>
+      <span class="stick-label left">◀</span>
+      <span class="stick-label right">▶</span>
+      <div class="knob"></div>
+    </div>
+    <div class="touch-buttons">
+      <button id="t-antennas" class="round" type="button" aria-label="Show antenna controls" aria-pressed="false">📡</button>
+      <button id="t-recenter" class="round" type="button" aria-label="Recenter">⟲</button>
+      <button id="t-mic" class="round" type="button" aria-label="Voice on/off" aria-pressed="false">🎙</button>
+    </div>
+  </div>
+
+  <div id="voice-badge" class="voice-badge" hidden>🎙 LIVE</div>
+  <div id="notice" class="notice" hidden></div>
+  <div id="banner" class="banner" role="alert" hidden></div>
+
+  <div id="overlay" class="overlay">
+    <div class="card">
+      <h1>Reachy FPS</h1>
+      <p>Drive your Reachy Mini in first person. Clicking starts video and asks for your microphone. Your voice stays off until you press <kbd>M</kbd>.</p>
+      <button id="btn-start" type="button" class="primary">Take control</button>
+      <p class="dim small touch-only">On a phone: drag the video to look, use the joystick to spin and rise, and 🎙 for voice.</p>
+      <p id="overlay-note" class="dim small"></p>
+    </div>
+  </div>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
